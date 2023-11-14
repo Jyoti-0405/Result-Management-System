@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Result Management System</title>
+    <link rel="stylesheet" href="/teacherLogin.css">
+</head>
+<body>
+    <nav class="navbar bg-primary">
+        <div class="btn-back">
+            <a href="javascript:history.go(-1);" class="back-button">Back</a>
+        </div>
+        <div class="container-fluid" style="margin-left: 20%;">
+          <a class="navbar-brand mb-0 h1">Result Management System</span>
+        </div>
+           
+      </nav>
+    <div class="container">
+        <div class="form-container">
+            <h1>Teacher Login</h1>
+            <form id="login-form" method="POST" onsubmit="submitForm()">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <p>New User? <a href="/teacher/signup">Signup</a></p>
+
+        </div>
+    </div>
+   <script>
+        let submitForm = async () => {
+            event.preventDefault();
+            let obj = {
+                email: document.getElementById('login-email').value,
+                password: document.getElementById('login-password').value
+            }
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(obj)
+            }
+            const rawResponse = await fetch("http://localhost:3001/api/user/login", options);
+            const content = await rawResponse.json();
+            if(content.success) {
+                localStorage.setItem("user", JSON.stringify(content.response));
+                window.location.assign("http://localhost:3001/useractions/view")
+            } else {
+                window.alert(content.response);
+            }
+        }
+   </script>
+</body>
+</html>

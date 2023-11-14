@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Login</title>
+    <link rel="stylesheet" href="/studentLogin.css">
+</head>
+<body>
+    <nav class="navbar bg-primary">
+        <div class="btn-back">
+            <a href="javascript:history.go(-1);" style="color: white;margin-left: -587%;" >Back</a>
+        </div> 
+        <div class="container-fluid" style="color: white;">
+            <a class="navbar-brand mb-0 h1 margin-left-right-auto" >Result Management System</span>
+        </div>   
+    </nav>
+    <div class="container">
+        <div class="form-container">
+            <h1>Student Login</h1>
+            <form id="login-form" onsubmit="login()">
+                <input type="email" id="email" placeholder="email" required>
+                <input type="password" id="password" placeholder="password" required>
+                <button type="submit">Login</button>
+            </form>
+            <p>New User? <a href="/student/signup">Signup</a></p>
+        </div>
+    </div>
+    <script>
+        let login = async () => {
+            event.preventDefault();
+            let obj = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            };
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(obj)
+            }
+            const rawResponse = await fetch("http://localhost:3001/api/user/login", options);
+            const content = await rawResponse.json();
+            if(content.success) {
+                localStorage.setItem("user", JSON.stringify(content.response));
+                window.location.assign("http://localhost:3001/studentaction/view")
+            } else {
+                window.alert(content.response);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+.text-align-center{
+    text-align: center;
+}
+
+.margin-left-right-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.student-form{
+    padding: 1%;
+    max-width: 50%;
+}
+
+.float-right{
+    float:right;
+}
+
+#record-check{
+    color: red;
+}

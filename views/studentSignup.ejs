@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Signup</title>
+    <link rel="stylesheet" href="/studentSignup.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"/>
+    <style>
+        .float-right{
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar bg-primary" style="padding-left: 2%;">
+        <div>
+            <a href="javascript:history.go(-1);" class="back-button">Back</a>
+        </div>
+        <div class="container-fluid" style="padding-left: 41%;">
+          <a class="navbar-brand mb-0 h1" style="color: white;">Result Management System</span>
+        </div>
+      </nav>
+    <div class="container">
+        <div class="form-container">
+            <h1>Student Signup</h1>
+            <form id="signup-form" onsubmit="submitForm()">
+                <div class="card" style="width: 100%;">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">Email</span>
+                                <input id="email" type="text" class="form-control" placeholder="email" aria-label="email"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">Password</span>
+                                <input id="password" type="password" class="form-control" placeholder="password" aria-label="email"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">First Name</span>
+                                <input id="firstName" type="text" class="form-control" placeholder="first name" aria-label="email"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">Last Name</span>
+                                <input id="lastName" type="text" class="form-control" placeholder="last name" aria-label="email"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <button type="submit" class="btn btn-primary float-right">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        var submitForm = async () => {
+            event.preventDefault();
+            let obj = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                isStudent: true
+            }
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(obj)
+            }
+            const rawResponse = await fetch("http://localhost:3001/api/user/registration", options);
+            const content = await rawResponse.json();
+            if(content.success) {
+                localStorage.setItem("user", JSON.stringify(content.response));
+                window.location.assign("http://localhost:3001/studentaction/view")
+            } else {
+                window.alert(content.response);
+            }
+        }
+    </script>
+</body>
+</html>

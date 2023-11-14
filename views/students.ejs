@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" , initial-scale="1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="/studentTable.css">
+    
+    <title>Result Management System</title>
+</head>
+
+<body>
+    <nav class="navbar bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand mb-0 h1 margin-left-right-auto" style="color: white;">Result Management System</span>
+        </div>
+        <div>
+            <a href="javascript:history.go(-1);" style="color: white; padding-left: 20px;" class="back-button">Back</a>
+        </div>
+        <div class="btn-logout">
+            <button class="btn btn-primary" onclick="logout()">Logout</button>
+        </div>   
+    </nav>
+    <div class="container">
+        <div>
+            <a href="http://localhost:3001/useractions/addrecord">
+                <button  type="button" class="btn btn-primary" style="margin-top: 10px; margin-bottom: 10px;">Add Record</button>
+            </a>
+        </div>
+        <div class="card" style="width: 100%;">
+            <table class="table table-bordered border-primary">
+                <thead>
+                    <tr>
+                        <th scope="col">Roll No.</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Date of Birth</th>
+                        <th scope="col">Score</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider" id="tbody-student-details"></tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var loadData = async () => {
+            let user = JSON.parse(localStorage.getItem("user"));
+            if (user == undefined || user == null) {
+                window.location.assign("http://localhost:3001");
+            }
+            let obj = {
+                "teacherId": user.id,
+                "limit": 1000,
+                "offset": 0
+            }
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + user.token
+                },
+                body: JSON.stringify(obj)
+            }
+            const rawResponse = await fetch("http://localhost:3001/api/teacher/allmarks", options);
+            const content = await rawResponse.json();
+            if (content.success) {
+                let res = content.response.rows;
+                let str = '';
+                for (let k = 0; k < res.length; k++) {
+                    res[k]["viewInput"] = false;
+                    str += `
+                            <tr>
+                                <td>`+ res[k]["rollNumber"] + `</td>
+                                <td>`+ res[k]["fullName"] + `</td>
+                                <td>`+ res[k]["dob"] + `</td>
+                                <td id="score-`+ res[k]["id"] + `">` + res[k]["score"] + `</td>
+                                <td id="show-input-`+ res[k]["id"] + `" class="display-none">
+                                    <input id="student-marks-`+ res[k]["id"] + `" value="` + res[k]["score"] + `" type="text" class="form-control" placeholder="Marks" aria-label="marks">
+                                    <button class="btn btn-primary" type="button" onclick="submitUpdate(`+ res[k]["id"] + `)">Submit</button>
+                                </td>
+                                <td>
+                                    <button onclick="update(`+ JSON.stringify(res[k]["id"]) + `)" class="btn btn-primary" type="button">Edit</button>
+                                    <button onclick="deleterecord(`+ JSON.stringify(res[k]["id"]) + `)" class="btn btn-primary" type="button">Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                }
+                let div = document.getElementById('tbody-student-details');
+                div.innerHTML += str;
+                console.log("content: ", content.response);
+            } else {
+                window.alert(content.response);
+                localStorage.clear();
+                window.location.assign("http://localhost:3001");
+            }
+        }
+        loadData();
+
+        function update(id) {
+            console.log(JSON.parse(id));
+            var elem = document.getElementById("score-" + id);
+            var input = document.getElementById("show-input-" + id);
+            elem.classList.toggle("display-none");
+            input.classList.toggle("display-none");
+        };
+
+        async function submitUpdate(id) {
+            var newScore = parseInt(document.getElementById("student-marks-" + id).value);
+            let token = JSON.parse(localStorage.getItem("user"))["token"];
+            let obj = {
+                "StudentId": id,
+                "marks": newScore
+            }
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify(obj)
+            };
+
+            const resp = await fetch("http://localhost:3001/api/teacher/update", options);
+            const status = await resp.json();
+            if (status.success) {
+                window.location.reload();
+            } else {
+                alert("Failed to update marks");
+            }
+        }
+
+        async function deleterecord(id) {
+            let token = JSON.parse(localStorage.getItem("user"))["token"];
+            let obj = {
+                "StudentId": id
+            }
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify(obj)
+            };
+
+            const result = await fetch("http://localhost:3001/api/teacher/remove", options);
+            const res = await result.json();
+            if (res.success) {
+                window.location.reload();
+            } else {
+                alert("Failed to remove record");
+            }
+        }
+        function logout(){
+            localStorage.clear();
+            window.location.href ="http://localhost:3001";
+        }
+    </script>
+</body>
+
+</html>
