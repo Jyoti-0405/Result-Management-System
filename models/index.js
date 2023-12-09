@@ -20,7 +20,7 @@ if (!config.USE_ENV) {
         ssl: {
           //SSL options
           // ca: fs.readFileSync('D:/RMS/cert/DigiCertGlobalRootCA.crt.pem'),
-          key: fs.readFileSync('D:/RMS/cert/private-key.pem')
+          key: fs.readFileSync('cert/private-key.pem')
           // cert: fs.readFileSync('D:/RMS/cert/DigiCertGlobalRootCA.crt.pem')
         }
       },

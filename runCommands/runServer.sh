@@ -15,8 +15,8 @@ export ISSUER='result.in'
 export MODEL_SYNC=false
 export RESULT_DB_PORT=3306
 export RESULT_CORS_URL="http://localhost:4200"
-export SSL_CERTIFICATE="D:/RMS/cert/private-key.pem"
-export SSL_CERTIFICATE_KEY="D:/RMS/cert/private-key.pem"
+export SSL_CERTIFICATE="cert/private-key.pem"
+export SSL_CERTIFICATE_KEY="cert/private-key.pem"
 export USE_ENV=true
 cd ../
 nodemon bin/www
