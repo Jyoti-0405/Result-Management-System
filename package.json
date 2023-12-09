@@ -17,11 +17,13 @@
         "express-rate-limit": "^6.8.1",
         "express-validator": "^7.0.1",
         "http-errors": "~1.6.3",
+        "https": "^1.0.0",
         "jsonwebtoken": "^9.0.2",
         "morgan": "~1.9.1",
+        "mssql": "^10.0.1",
         "mysql2": "^3.6.0",
         "pug": "2.0.0-beta11",
-        "sequelize": "^6.32.1"
+        "sequelize": "^6.6.2"
     },
     "devDependencies": {
         "sequelize-cli": "^6.6.1"

@@ -8,7 +8,9 @@ var app = require("../app");
 var debug = require("debug")("result:server");
 var config = require("../config/config");
 var models = require("../models");
+var https = require("https");
 var http = require("http");
+var fs = require("fs");
 var server;
 
 /**
@@ -38,12 +40,12 @@ function createAndListenToServer() {
       server = http.createServer(app).listen(port);
     } else if (config.SERVER_PROTOCOL === "https") {
       app.set("port", port);
-      server = http.createServer(app).listen(port);
-      // var sslOptions = {
-      //   cert: fs.readFileSync(config.SSL_CERTIFICATE),
-      //   key: fs.readFileSync(config.SSL_CERTIFICATE_KEY)
-      // };
-      // https.createServer(sslOptions, app).listen(config.SERVER_PORT);
+      server = https.createServer(app).listen(port);
+      var sslOptions = {
+        cert: fs.readFileSync(config.SSL_CERTIFICATE),
+        key: fs.readFileSync(config.SSL_CERTIFICATE_KEY)
+      };
+      https.createServer(sslOptions, app).listen(config.SERVER_PORT);
     } else {
       console.error("Unknown server protocol: " + config.SERVER_PROTOCOL);
       process.exit(1);

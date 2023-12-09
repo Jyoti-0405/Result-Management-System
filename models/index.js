@@ -10,13 +10,22 @@ const config = require('../config/config.js');
 const db = {};
 
 let sequelize;
-if (config.use_env_variable) {
-    sequelize = new Sequelize(process.env[config.use_env_variable], config);
+if (!config.USE_ENV) {
+    sequelize = new Sequelize(process.env[config.USE_ENV], config);
   } else {
     sequelize = new Sequelize(config.database, config.username, config.password, {
-      host: config.host,
+      host: config.RESULT_DB_HOST,
       dialect: config.dialect,
-      port: config.port,
+      dialectOptions: {
+        ssl: {
+          //SSL options
+          // ca: fs.readFileSync('D:/RMS/cert/DigiCertGlobalRootCA.crt.pem'),
+          key: fs.readFileSync('D:/RMS/cert/private-key.pem')
+          // cert: fs.readFileSync('D:/RMS/cert/DigiCertGlobalRootCA.crt.pem')
+        }
+      },
+      port: config.RESULT_DB_PORT,
+
     });
 }
 

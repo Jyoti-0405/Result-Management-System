@@ -21,6 +21,9 @@ config.dialect = process.env.DIALECT;
 config.host = process.env.SERVER_HOST;
 config.MODEL_SYNC = process.env.MODEL_SYNC;
 config.ISSUER = process.env.ISSUER;
+config.SSL_CERTIFICATE = process.env.SSL_CERTIFICATE;
+config.SSL_CERTIFICATE_KEY = process.env.SSL_CERTIFICATE_KEY;
+config.USE_ENV = process.env.USE_ENV;
 
 var missingKeys = [];
 Object.keys(config).forEach((key) => {
